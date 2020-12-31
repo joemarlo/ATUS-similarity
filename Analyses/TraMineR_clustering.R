@@ -101,6 +101,7 @@ s_width$All.index %>%
        y = 'Silhouette width')
 #ggsave("Plots/silhouette_width.svg", width = 7, height = 4)
 
+
 # dendrograms -------------------------------------------------------------
 
 hcl_ward <- clusters
@@ -163,24 +164,56 @@ seqmsplot(atus_seq, group = cluster_6, border = NA, main = "Mean time")
 dev.off()
 
 
-
 # final dataset -----------------------------------------------------------
 
 # read in lookup table of activity:letter
 string_table <- read_csv("Analyses/Data/string_table.csv")
 
-# dataframe of id, sequence, and cluster membership
-IDs_by_cluster <- atus_sampled %>% 
+# long dataframe of the IDs and each state
+clusters_long <- atus_sampled %>% 
   mutate(cluster = cluster_6) %>% 
   pivot_longer(cols = starts_with("p")) %>% 
   left_join(string_table, by = c("value" = "description")) %>% 
-  dplyr::select(ID, cluster, string) %>% 
+  dplyr::select(ID, cluster, string)
+
+# dataframe of id, sequence, and cluster membership
+IDs_by_cluster <- clusters_long %>% 
   group_by(ID, cluster) %>% 
   summarize(sequence = paste0(string, collapse = ""),
             .groups = 'drop')
 
 # write out cluster membership
 write_csv(IDs_by_cluster, path = "Analyses/Data/clusters.csv")
+
+
+# modal strings -----------------------------------------------------------
+
+get_mode <- function(x) {
+  uniq <- unique(x)
+  mode <- uniq[which.max(tabulate(match(x, uniq)))]
+  return(mode)
+}
+
+# get modal activity by cluster and time
+modal_activities <- clusters_long %>% 
+  group_by(ID) %>% 
+  mutate(index = row_number()) %>% 
+  group_by(cluster, index) %>% 
+  summarize(mode = get_mode(string))
+
+# plot the modes
+modal_activities %>% 
+  left_join(string_table, by = c("mode" = "string")) %>% 
+  ggplot(aes(x = index, y = 1, fill = description)) +
+  geom_tile() +
+  facet_wrap(~cluster)
+
+# write out the modal strings
+modal_strings <- modal_activities %>% 
+  group_by(cluster) %>% 
+  summarize(sequence = paste0(mode, collapse = ""),
+            .groups = 'drop')
+write_csv(modal_strings, "Analyses/Data/modes.csv")
 
 
 # plot the sequences ------------------------------------------------------
@@ -220,3 +253,6 @@ atus_samp %>%
        fill = NULL) +
   guides(fill = guide_legend(ncol = 1)) +
   theme(legend.position = 'right')
+
+
+

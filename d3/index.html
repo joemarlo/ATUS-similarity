@@ -1,0 +1,24 @@
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<html>
+  <link rel="stylesheet" type="text/css" href="ATUS-similarity.css">
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto">
+  <script src="https://d3js.org/d3.v5.js"></script>
+  <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/jstat/latest/jstat.min.js"></script>
+  <script src="//unpkg.com/string-similarity/umd/string-similarity.min.js"></script>
+<head>
+<body>
+  <div id='container_string_input'>
+      <h3>String sequence: <span id="output_string"></span></h3>
+        <input type="text" value="CCCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDDDDDDCCCCCCCCCC" id="input_sequence">
+        <!--<input type="text" value="Cluster 1" id="input_cluster">-->
+        <input type="button" value="Update" id="button_update">
+  </div>
+    <svg id="plot_sequence"></svg>
+  <script src="functions.js"></script>
+  <script src="plotData.js"></script>
+</body>
+</html>

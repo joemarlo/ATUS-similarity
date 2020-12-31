@@ -1,30 +1,28 @@
 require(viridis)
 
 # build custom theme
-theme_custom <- function()
-  theme_minimal() +
-  theme(
-    strip.background = element_rect(
-      fill = "gray95",
-      color = 'white'),
-    strip.text = element_text(
-      color = "gray30",
-      size = 11,
-      face = "bold"
-    ),
-    text = element_text(family = "Helvetica",
-                        color = "gray30"),
-    axis.title = element_text(
-      hjust = 0.99),
-      # size = 12),
-    axis.title.x = element_text(vjust = -1),
-    legend.direction = "horizontal", 
-    legend.position = "bottom",
-    legend.justification = "right",
-    plot.caption = element_text(face = "italic",
-                                size = 8,
-                                color = 'grey50')
-  )
+theme_custom <- function(){
+  theme_gray() +
+    theme(
+      strip.background = element_rect(
+        fill = "gray95",
+        color = 'white'),
+      strip.text = element_text(
+        color = "gray30",
+        size = 11,
+        face = "bold"
+      ),
+      text = element_text(family = "Helvetica",
+                          color = "gray30"),
+      axis.ticks = element_line(color = NA),
+      legend.direction = "horizontal", 
+      legend.position = "bottom",
+      legend.justification = "right",
+      plot.caption = element_text(face = "italic",
+                                  size = 8,
+                                  color = 'grey50')
+    )
+}
 
 # set custom theme
 theme_set(theme_custom())
