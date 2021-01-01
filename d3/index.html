@@ -3,6 +3,7 @@
 <meta charset="utf-8">
 
 <html>
+  <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">-->
   <link rel="stylesheet" type="text/css" href="ATUS-similarity.css">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto">
   <script src="https://d3js.org/d3.v5.js"></script>
@@ -11,14 +12,27 @@
   <script src="//unpkg.com/string-similarity/umd/string-similarity.min.js"></script>
 <head>
 <body>
-  <div id='container_string_input'>
+  <div id='container_string_input' class='container'>
       <h3>String sequence: <span id="output_string"></span></h3>
-        <input type="text" value="CCCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDDDDDDCCCCCCCCCC" id="input_sequence">
+        <!--<input type="text" value="CCCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDDDDDDCCCCCCCCCC" id="input_sequence">-->
+
+        <select value=Test1 class="input" id="input_sequence">
+          <option value='CCCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDDDDDDCCCCCCCCCC'>Test 1</option>
+          <option value='CCCCCCCCCCCCCCCCCFFFFFFFFFFFFFFFFFFFFFFFCCCCCCCC'>Test 2</option>
+          <option value='CCCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDDDDCCCCCCCCCCCC'>Test 3</option>
+          <option value='CCCCCCMMMMMMMMMMMMMMMMMMMMDDDDDDDDDDCCCCCCCCCCCC'>Test 4</option>
+          <option value='CCCCCFFFFFFFFFFFFFFFFFFFFFFFFDDDDDDDCCCCCCCCCCCC'>Test 5</option>
+          <option value='CCCCCCCCEEEEEEEEEEEEEEEEEEEEDDDDDDDDCCCCCCCCCCCC'>Test 6</option>
         <!--<input type="text" value="Cluster 1" id="input_cluster">-->
-        <input type="button" value="Update" id="button_update">
+        <input type="button" class="btn" value="Update" id="button_update">
   </div>
-    <svg id="plot_sequence"></svg>
+    <div id="plot_sequence"></div>
   <script src="functions.js"></script>
-  <script src="plotData.js"></script>
+  <script src="plotSequence.js"></script>
+  <!--
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  -->
 </body>
 </html>

@@ -25,6 +25,9 @@ function classifySequence(input_sequence, modal_sequences){
   return cluster
 }
 
+tmp = "kalsjdlaks"
+console.log(tmp.split(""))
+
 // modal sequences per cluster
 modal_sequences = ['CCCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDDDDDDCCCCCCCCCC',
 'CCCCCCCCCCCCCCCCCFFFFFFFFFFFFFFFFFFFFFFFCCCCCCCC',

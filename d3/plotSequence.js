@@ -16,7 +16,6 @@ function loadData() {
     })
 }
 
-
 function getConfig() {
   let width = 700;
   let height = 800;
@@ -32,9 +31,9 @@ function getConfig() {
   let bodyWidth = width - margin.left - margin.right;
 
   //The container is the SVG where we will draw the chart
-  let container = d3.select("#plot_sequence" );
+  let container = d3.select("#plot_sequence");
   container = container
-    //.append("svg")
+    .append("svg")
     .attr("class", "plot")
     .attr("width", width)
     .attr("height", height)
@@ -48,11 +47,6 @@ function getConfig() {
 
 function drawRects(data){
   let {margin, bodyHeight, bodyWidth, container} = getConfig()
-
-  console.log(data)
-
-  // join data to the demopgraphics info
-  //data = leftJoin(data, demographics, "ID", "ID")
 
   // Labels of row and columns -> unique identifier of the column called 'group' and 'variable'
   var myGroups = d3.map(data, function(d){return d.time;}).keys()
@@ -125,14 +119,19 @@ function drawRects(data){
             "Household income: " + formatter.format(d.HH_income) + "<br>" +
             "Race: " + d.race + "<br>" +
             "Education: " + d.education)
-      .style("left", (d3.mouse(this)[0]+0) + "px")
+      .style("left", (d3.mouse(this)[0]+70) + "px")
       .style("top", (d3.mouse(this)[1]) + "px")
   }
   function mouseleave(d){
     tooltip
       .style("opacity", 0)
     d3.select(this)
-      .style("stroke", "none")
+      .style("stroke", function(d, i){
+        if (d.ID == "user"){
+          return "white"
+        }
+        return "none";
+      })
       .style("opacity", 0.8)
   }
 
@@ -155,6 +154,12 @@ function drawRects(data){
     .style("fill", d => myColor(d.activity))
     .style("stroke-width", 2)
     .style("stroke", "none")
+    .style("stroke", function(d, i){
+      if (d.ID == "user"){
+        return "white"
+      }
+      return "none";
+    })
     .style("opacity", 0.8)
     .on("mouseover", mouseover)
     .on("mousemove", mousemove)
@@ -201,6 +206,25 @@ function filterData(sequences, demographics, inputSequence, modal_sequences){
   // left join the two datasets
   data = mergeOn(indexBy('ID', demographics), 'ID', sequences)
 
+  // create object out of the user input sequence
+  splitSeq = inputSequence.split("")
+  userSequence = [];
+  for (var i=0; i<48; i++){
+    userSequence[i] = {
+      ID: "user",
+      activity: splitSeq[i],
+      cluster: matching_cluster,
+      time: (i+1).toString()
+    };
+  }
+  console.log("Parsed user sequence:", userSequence)
+
+  // add user object to middle of main data frame
+  let starting_row = Math.floor(data.length / 2)
+  for (var i=starting_row; i<(starting_row+48); i++){
+    data[i] = userSequence[(i-starting_row)]
+  }
+
   return data
 }
 
@@ -210,16 +234,20 @@ function showData(data){
   string_table = data.string_table
   //modal_sequences = d3.map(data.modal_sequences, d => d.sequence).values(sequence)
   modal_sequences = modal_sequences
-  //modal_sequences = data.modal_sequences.values(sequence)
-  let inputSequence = "CCCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDDDDDDCCCCCCCCCC"
   //console.log(modal_sequences)
+
+  // default input sequence
+  inputSequence = "CCCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDDDDDDCCCCCCCCCC"
 
   filtered_data = filterData(sequences, demographics, inputSequence, modal_sequences)
   drawRects(filtered_data);
 
   // update plot on user input
-  d3.select("#input_sequence").on("input", function() {
-    inputSequence = this.value
+  d3.select("#button_update").on("click", function() {
+    d3.select("svg.plot").remove()
+    d3.selectAll('.tooltip').remove()
+    //inputSequence = this.value
+    inputSequence = document.getElementById("input_sequence").value;
     filtered_data = filterData(sequences, demographics, inputSequence, modal_sequences)
     drawRects(filtered_data)
   });
