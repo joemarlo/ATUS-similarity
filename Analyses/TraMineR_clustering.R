@@ -105,7 +105,7 @@ s_width$All.index %>%
 # dendrograms -------------------------------------------------------------
 
 hcl_ward <- clusters
-hcl_k <- 6 #s_width$Best.nc[['Number_clusters']] # need a balance of optimal width and enough clusters to be interesting to the user
+hcl_k <- 10 #s_width$Best.nc[['Number_clusters']] # need a balance of optimal width and enough clusters to be interesting to the user
 dend <- as.dendrogram(hcl_ward) %>% set("branches_k_color", k = hcl_k) %>% set("labels_colors")
 dend <- cut(dend, h = 50)$upper # cut off bottom of dendogram for computation performance
 ggd1 <- as.ggdend(dend)
@@ -140,7 +140,7 @@ ggd1$segments %>%
 # sequence plots ----------------------------------------------------------
 
 cluster_6 <- cutree(clusters, k = hcl_k)
-cluster_6 <- factor(cluster_6, labels = paste("Cluster", 1:6))
+cluster_6 <- factor(cluster_6, labels = paste("Cluster", 1:hcl_k))
 
 # dev.off()
 par(mar = c(3, 3, 3, 3))
@@ -174,12 +174,12 @@ clusters_long <- atus_sampled %>%
   mutate(cluster = cluster_6) %>% 
   pivot_longer(cols = starts_with("p")) %>% 
   left_join(string_table, by = c("value" = "description")) %>% 
-  dplyr::select(ID, cluster, string)
+  dplyr::select(ID, cluster, activity)
 
 # dataframe of id, sequence, and cluster membership
 IDs_by_cluster <- clusters_long %>% 
   group_by(ID, cluster) %>% 
-  summarize(sequence = paste0(string, collapse = ""),
+  summarize(sequence = paste0(activity, collapse = ""),
             .groups = 'drop')
 
 # write out cluster membership
@@ -199,11 +199,11 @@ modal_activities <- clusters_long %>%
   group_by(ID) %>% 
   mutate(index = row_number()) %>% 
   group_by(cluster, index) %>% 
-  summarize(mode = get_mode(string))
+  summarize(mode = get_mode(activity))
 
 # plot the modes
 modal_activities %>% 
-  left_join(string_table, by = c("mode" = "string")) %>% 
+  left_join(string_table, by = c("mode" = "activity")) %>% 
   ggplot(aes(x = index, y = 1, fill = description)) +
   geom_tile() +
   facet_wrap(~cluster)

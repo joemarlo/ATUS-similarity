@@ -32,8 +32,7 @@ demographics %>%
                              TRUE ~ "-")) %>% 
   write_csv("d3/data/demographics.csv")
 
-
 # change name on string table
-read_csv("Analyses/Data/string_table.csv") %>% 
-  rename(activity = string) %>% 
-  write_csv("d3/data/string_table.csv")
+# read_csv("Analyses/Data/string_table.csv") %>% 
+#   rename(activity = string) %>% 
+#   write_csv("d3/data/string_table.csv")

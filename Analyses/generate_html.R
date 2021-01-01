@@ -18,10 +18,10 @@ scales::show_col(sequence_colors)
 
 # add colors to string table
 string_table <- read_csv("d3/data/string_table.csv") %>%
-  mutate(val = sample(sequence_colors, 15))
+# string_table$val <- sample(sequence_colors, 15)
 
 # write out table
-string_table %>% write_csv('d3/data/string_table.csv')
+# string_table %>% write_csv('d3/data/string_table.csv')
 
 # get colors for lookup table in jquery
 paste0("{val : '", string_table$val, "', text: '", string_table$description, "'}", collapse = ', ')
