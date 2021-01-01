@@ -1,5 +1,6 @@
 library(tidyverse)
 set.seed(44)
+setwd('/home/joemarlo/Dropbox/Data/Projects/ATUS-similarity')
 
 IDs_by_cluster <- read_csv(file = "Analyses/Data/clusters.csv")
 modal_strings <- read_csv(file = "Analyses/Data/modes.csv")

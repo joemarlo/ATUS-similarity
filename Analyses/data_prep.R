@@ -1,3 +1,4 @@
+setwd('/home/joemarlo/Dropbox/Data/Projects/ATUS-similarity')
 
 # temp: create test data for d3
 tmp <- IDs_by_cluster %>% 

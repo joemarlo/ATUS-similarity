@@ -1,3 +1,13 @@
+// change the color of the dropdown based on its value
+var i;
+$('.user_input').change(function(){
+    i = this.id.slice(11);
+    $("#user_input_"+i).css('background-color', $(this).val());
+    $("#user_input_"+i).css('color', $(this).val());
+});
+
+
+
 // create dollar formatter
 var formatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -7,10 +17,6 @@ var formatter = new Intl.NumberFormat('en-US', {
   minimumFractionDigits: 0,
   maximumFractionDigits: 0,
 });
-
-
-//entropy
-
 
 //https://medium.com/@sumn2u/string-similarity-comparision-in-js-with-examples-4bae35f13968
 function stringDistance(stringA, stringB){

@@ -77,3 +77,26 @@ span {
 .btn:active {
   background-color: #54536e !important;
 }
+
+.user_input {
+  width: 10px;
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+#user_input_1 {
+  background-color: #9E0142;
+  color: #9E0142;
+}
+
+/*removes dropdown arrow */
+select {
+   -o-appearance: none;
+   -ms-appearance: none;
+   -webkit-appearance: none;
+   -moz-appearance: none;
+   appearance: none;
+}
