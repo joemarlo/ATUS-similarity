@@ -23,7 +23,13 @@ demographics <- read_delim(file = "Inputs/demographic.tsv",
 demographics %>% 
   dplyr::select(ID, age, sex, n_child, HH_income, married, race, education, state) %>% 
   filter(ID %in% tmp$ID) %>% 
-  left_join(tmp %>% distinct(ID, cluster)) %>% 
+  left_join(tmp %>% distinct(ID, cluster)) %>%
+  mutate(sex = case_when(sex == 1 ~ "Male", 
+                         sex == 2 ~ "Female", 
+                         TRUE ~ '-'),
+         married = case_when(married == 1 ~ "Yes",
+                             married == 0 ~ "No",
+                             TRUE ~ "-")) %>% 
   write_csv("d3/data/demographics.csv")
 
 
