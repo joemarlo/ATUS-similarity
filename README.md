@@ -10,6 +10,8 @@ See also: [ATUS repo](https://github.com/joemarlo/ATUS)
 - refine string distance calculation
 - fix tooltip on sequence plot
 - fix axis format on sequence plot
+  - reset to 4am
 - expand colors to all 15 categories
   - make sure colors are consistent on plot refresh
 - sort observations by entropy (do this in R data prep?)
+- expand n clusters and then filter cluster to nearest 100 persons by string distance

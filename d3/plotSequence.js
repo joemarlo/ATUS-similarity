@@ -112,7 +112,7 @@ function drawRects(data){
   }
   function mousemove(d){
     tooltip
-      .html("Activity: " + d.activity + "<br>" +
+      .html("Activity: " + d.description + "<br>" +
             "Age: " + d.age + "<br>" +
             "Sex: " + d.sex + "<br>" +
             "Number of children: " + d.n_child + "<br>" +
@@ -193,7 +193,7 @@ function addTitle(){
           .text("A short description of the take-away message of this chart.");
 }
 
-function filterData(sequences, demographics, inputSequence, modal_sequences){
+function filterData(sequences, demographics, inputSequence, modal_sequences, string_table){
 
   // classify the user inputted string
   matching_cluster = classifySequence(inputSequence, modal_sequences)
@@ -205,6 +205,9 @@ function filterData(sequences, demographics, inputSequence, modal_sequences){
 
   // left join the two datasets
   data = mergeOn(indexBy('ID', demographics), 'ID', sequences)
+
+  // left join to get activity names
+  data = mergeOn(indexBy('activity', string_table), 'activity', data)
 
   // create object out of the user input sequence
   splitSeq = inputSequence.split("")
@@ -239,7 +242,7 @@ function showData(data){
   // default input sequence
   inputSequence = "CCCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDDDDDDCCCCCCCCCC"
 
-  filtered_data = filterData(sequences, demographics, inputSequence, modal_sequences)
+  filtered_data = filterData(sequences, demographics, inputSequence, modal_sequences, string_table)
   drawRects(filtered_data);
 
   // update plot on user input
@@ -248,7 +251,7 @@ function showData(data){
     d3.selectAll('.tooltip').remove()
     //inputSequence = this.value
     inputSequence = document.getElementById("input_sequence").value;
-    filtered_data = filterData(sequences, demographics, inputSequence, modal_sequences)
+    filtered_data = filterData(sequences, demographics, inputSequence, modal_sequences, string_table)
     drawRects(filtered_data)
   });
   //addTitle()

@@ -24,3 +24,9 @@ demographics %>%
   filter(ID %in% tmp$ID) %>% 
   left_join(tmp %>% distinct(ID, cluster)) %>% 
   write_csv("d3/data/demographics.csv")
+
+
+# change name on string table
+read_csv("Analyses/Data/string_table.csv") %>% 
+  rename(activity = string) %>% 
+  write_csv("d3/data/string_table.csv")
