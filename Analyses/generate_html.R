@@ -20,7 +20,7 @@ sequence_colors <- c(
     "#65e6f9",
     "#154e56",
     "#58df8c",
-    "#069668",
+    "#966106", #"#069668",
     "#b5d08d",
     "#6d3918",
     "#f24325",
@@ -37,7 +37,7 @@ scales::show_col(sequence_colors)
 
 # add colors to string table
 string_table <- read_csv("d3/data/string_table.csv")
-string_table$val <- sequence_colors
+#string_table$val <- sequence_colors
 
 # manually edit colors
 # string_table$val[string_table$description == 'Sleep'] = 
@@ -50,15 +50,26 @@ writeLines(
   paste0("{val : '", string_table$val, "', text: '", string_table$description, "'}", collapse = ', ')
 )
 
-# set default string to be used for input boxes
-default_string <- "CCCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDDDDDDCCCCCCCCCC"
+
+# read in modal strings
+modal_strings <- read_csv("Analyses/Data/modes.csv")
 
 # get colors of default string for use in jquery
-tibble(default_string) %>% 
-  separate(default_string, as.character(1:48), sep = 1:48) %>% 
-  pivot_longer(cols = 1:48) %>% 
+modal_strings_colors <- modal_strings %>% 
+  group_by(cluster) %>% 
+  separate(sequence, as.character(2:49), sep = 1:48) %>% 
+  pivot_longer(cols = 2:49) %>% 
   rename(activity = value) %>% 
-  left_join(string_table) %>% 
-  pull(val) %>% 
-  paste0("{val : '", ., "'}", collapse = ',') %>% 
-  writeLines()
+  left_join(string_table)
+
+# generate JS code to define sequence arrays per cluster
+final_clusters <- unique(modal_strings_colors$cluster)
+for (i in seq_along(final_clusters)){
+  modal_strings_colors %>% 
+    filter(cluster == final_clusters[i]) %>% 
+    pull(val) %>% 
+    paste0("{val : '", ., "'}", collapse = ',') %>% 
+    writeLines()
+  writeLines('\n')
+}
+

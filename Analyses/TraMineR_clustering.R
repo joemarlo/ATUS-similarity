@@ -69,18 +69,19 @@ seqmtplot(atus_seq, with.legend = FALSE, main = "(d) modal state seq.")
 
 # compute optimal matching distances
 dist_om_TRATE <- seqdist(atus_seq, method = "OM", indel = 1, sm = "TRATE")
+dist_om_DHD <- seqdist(atus_seq, method = "DHD")
 
 # cluster the data
-clusters <- hclust(as.dist(dist_om_TRATE), method = "ward.D2")
+clusters <- hclust(as.dist(dist_om_DHD), method = "ward.D2")
 
 # get optimal cluster sizes by calculating silhouette width
 s_width <- NbClust(
   data = NULL,
-  diss = as.dist(dist_om_TRATE),
+  diss = as.dist(dist_om_DHD),
   distance = NULL,
   method = 'ward.D2',
-  max.nc = 14,
-  min.nc = 2,
+  max.nc = 12,
+  min.nc = 6,
   index = 'silhouette'
 )
 
@@ -92,20 +93,20 @@ s_width$All.index %>%
   geom_line(color = 'grey30') +
   geom_area(alpha = 0.4) +
   geom_point(color = 'grey30') +
-  scale_x_continuous(breaks = 2:14) +
-  labs(title = "Silhouette width",
+  scale_x_continuous(breaks = 6:12) +
+  labs(title = "Silhouette width: dynamic Hamming distance",
        subtitle = paste0("Weighted sample of ", 
                          scales::comma_format()(n_sample),
                          " respondents"),
        x = 'n clusters',
        y = 'Silhouette width')
-#ggsave("Plots/silhouette_width.svg", width = 7, height = 4)
+# ggsave("Plots/silhouette_width.svg", width = 7, height = 4)
 
 
 # dendrograms -------------------------------------------------------------
 
 hcl_ward <- clusters
-hcl_k <- 10 #s_width$Best.nc[['Number_clusters']] # need a balance of optimal width and enough clusters to be interesting to the user
+hcl_k <- 7 #s_width$Best.nc[['Number_clusters']] # need a balance of optimal width and enough clusters to be interesting to the user
 dend <- as.dendrogram(hcl_ward) %>% set("branches_k_color", k = hcl_k) %>% set("labels_colors")
 dend <- cut(dend, h = 50)$upper # cut off bottom of dendogram for computation performance
 ggd1 <- as.ggdend(dend)
@@ -148,8 +149,8 @@ par(mar = c(3, 3, 3, 3))
 seqIplot(atus_seq, group = cluster_6, sortv = "from.start", main = "State sequences", with.legend = FALSE)
 dev.off()
 
-par(mar = c(3, 3, 3, 3))
-#png(paste0("Plots/TraMineR/", dist_names[i], "_state_distribution.png"), width = 900, height = 450)
+par(mar = rep(1.5,4))
+png(paste0("Plots/DHD_state_distribution.png"), width = 700, height = 1000)
 seqdplot(atus_seq, group = cluster_6, sortv = "from.start", border = 'white', main = "State distributions", with.legend = FALSE)
 dev.off()
 
@@ -201,12 +202,23 @@ modal_activities <- clusters_long %>%
   group_by(cluster, index) %>% 
   summarize(mode = get_mode(activity))
 
+# need to shift time four hours and fix labels
+labels <- as.character(seq(2, 24, by = 2))
+labels <- c(labels[2:12], labels[1:2])
+labels[1] <- "4am"
+
 # plot the modes
 modal_activities %>% 
   left_join(string_table, by = c("mode" = "activity")) %>% 
-  ggplot(aes(x = index, y = 1, fill = description)) +
-  geom_tile() +
-  facet_wrap(~cluster)
+  ggplot(aes(x = index, y = cluster, fill = description)) +
+  geom_tile(color = 'white', size = 0.5) +
+  scale_x_continuous(labels = labels,
+                     breaks = seq(0, 48, by = 4)) +
+  labs(title = "Modal sequences per cluster",
+       x = NULL,
+       y = NULL,
+       fill = NULL)
+# ggsave("Plots/modal_sequences.svg", width = 7, height = 4)
 
 # write out the modal strings
 modal_strings <- modal_activities %>% 
@@ -223,22 +235,17 @@ write_csv(modal_strings, "Analyses/Data/modes.csv")
 atus_samp <- IDs_by_cluster %>%
   separate(sequence, as.character(1:48), sep = 1:48) %>% 
   pivot_longer(cols = 3:50) %>%
-  rename(string = value,
+  rename(activity = value,
          period = name) %>% 
-  left_join(string_table, by = 'string') %>% 
+  left_join(string_table, by = 'activity') %>% 
   na.omit() %>% 
   mutate(period = as.numeric(period),
          ID = as.factor(ID))
 
-# need to shift time four hours and fix labels
-labels <- as.character(seq(2, 24, by = 2))
-labels <- c(labels[2:12], labels[1:2])
-labels[1] <- "4am"
-
 # sequence plots by cluster
 atus_samp %>%
   group_by(ID) %>% 
-  mutate(entropy = DescTools::Entropy(table(string))) %>%
+  mutate(entropy = DescTools::Entropy(table(activity))) %>%
   ungroup() %>% 
   ggplot(aes(x = period, y = reorder(ID, entropy), fill = description)) +
   geom_tile() +
@@ -253,6 +260,4 @@ atus_samp %>%
        fill = NULL) +
   guides(fill = guide_legend(ncol = 1)) +
   theme(legend.position = 'right')
-
-
-
+# ggsave("Plots/state_distributions_by_cluster.png", width = 9, height = 6)
