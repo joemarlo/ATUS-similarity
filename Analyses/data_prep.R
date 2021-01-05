@@ -4,7 +4,7 @@ setwd('/home/joemarlo/Dropbox/Data/Projects/ATUS-similarity')
 IDS_by_cluster <- read_csv('Analyses/Data/clusters.csv')
 sampled_IDs <- IDs_by_cluster %>% 
   group_by(cluster) %>% 
-  slice_sample(n = 100) %>%
+  slice_sample(n = 150) %>%
   separate(sequence, as.character(1:48), sep = 1:48) %>% 
   pivot_longer(cols = 3:50) %>% 
   rename(time = name, activity = value) %>% 
@@ -31,10 +31,14 @@ demographics %>%
                              married == 0 ~ "No",
                              TRUE ~ "-"),
          HH_income = if_else(is.na(HH_income), 0, HH_income),
-         race = str_to_title(race)) %>% 
+         race = str_to_title(race),
+         education = if_else(education == "Did not graduate from HS",
+                             "Less than HS",
+                             education)) %>% 
   write_csv("d3/data/demographics.csv")
 
 # change name on string table
 # read_csv("Analyses/Data/string_table.csv") %>% 
 #   rename(activity = string) %>% 
 #   write_csv("d3/data/string_table.csv")
+
