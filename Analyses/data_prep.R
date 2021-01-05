@@ -19,6 +19,7 @@ demographics <- read_delim(file = "Inputs/demographic.tsv",
                            escape_double = FALSE,
                            trim_ws = TRUE)
 
+# get demographics for the sampled IDs and write out
 demographics %>% 
   dplyr::select(ID, age, sex, n_child, HH_income, married, race, education, state) %>% 
   filter(ID %in% sampled_IDs$ID) %>% 
@@ -29,7 +30,8 @@ demographics %>%
          married = case_when(married == 1 ~ "Yes",
                              married == 0 ~ "No",
                              TRUE ~ "-"),
-         HH_income = if_else(is.na(HH_income), 0, HH_income)) %>% 
+         HH_income = if_else(is.na(HH_income), 0, HH_income),
+         race = str_to_title(race)) %>% 
   write_csv("d3/data/demographics.csv")
 
 # change name on string table
