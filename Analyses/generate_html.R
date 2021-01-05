@@ -53,6 +53,56 @@ writeLines(
 
 # read in modal strings
 modal_strings <- read_csv("Analyses/Data/modes.csv")
+# modal_strings %>% write_csv("Analyses/Data/input_to_manual_strings.csv")
+
+# manually edit strings to make them more realistic
+# if the modal strings change then all this needs should be updated too
+str_sub(modal_strings[1, 'sequence'], 11, 11) <- 'B'
+str_sub(modal_strings[1, 'sequence'], 12, 12) <- 'H'
+str_sub(modal_strings[1, 'sequence'], 18, 18) <- 'H'
+str_sub(modal_strings[1, 'sequence'], 30, 30) <- 'H'
+str_sub(modal_strings[1, 'sequence'], 38, 38) <- 'B'
+
+str_sub(modal_strings[2, 'sequence'], 9, 9) <- 'H'
+str_sub(modal_strings[2, 'sequence'], 30, 30) <- 'C'
+str_sub(modal_strings[2, 'sequence'], 31, 31) <- 'B'
+str_sub(modal_strings[2, 'sequence'], 32, 34) <- 'DDD'
+str_sub(modal_strings[2, 'sequence'], 35, 35) <- 'H'
+
+str_sub(modal_strings[3, 'sequence'], 9, 9) <- 'B'
+str_sub(modal_strings[3, 'sequence'], 10, 10) <- 'H'
+str_sub(modal_strings[3, 'sequence'], 18, 18) <- 'H'
+str_sub(modal_strings[3, 'sequence'], 32, 32) <- 'H'
+str_sub(modal_strings[3, 'sequence'], 36, 36) <- 'B'
+
+str_sub(modal_strings[4, 'sequence'], 7, 7) <- 'B'
+str_sub(modal_strings[4, 'sequence'], 18, 18) <- 'H'
+str_sub(modal_strings[4, 'sequence'], 32, 32) <- 'H'
+
+str_sub(modal_strings[5, 'sequence'], 7, 7) <- 'B'
+str_sub(modal_strings[5, 'sequence'], 8, 8) <- 'H'
+str_sub(modal_strings[5, 'sequence'], 18, 18) <- 'H'
+str_sub(modal_strings[5, 'sequence'], 31, 32) <- 'HH'
+
+str_sub(modal_strings[6, 'sequence'], 4, 4) <- 'B'
+str_sub(modal_strings[6, 'sequence'], 5, 5) <- 'H'
+str_sub(modal_strings[6, 'sequence'], 18, 18) <- 'H'
+str_sub(modal_strings[6, 'sequence'], 27, 27) <- 'H'
+
+str_sub(modal_strings[7, 'sequence'], 15, 15) <- 'H'
+str_sub(modal_strings[7, 'sequence'], 41, 41) <- 'H'
+str_sub(modal_strings[7, 'sequence'], 42, 42) <- 'B'
+
+# create non-cluster days
+otherCare <- modal_strings[[3, 'sequence']]
+otherVolunteer <- modal_strings[[3, 'sequence']]
+otherReligious <- modal_strings[[3, 'sequence']]
+otherCare <- str_replace_all(otherCare, 'E', 'I')
+otherVolunteer <- str_replace_all(otherVolunteer, 'E', 'N')
+otherReligious <- str_replace_all(otherReligious, 'E', 'O')
+modal_strings <- modal_strings %>% 
+  bind_rows(tibble(cluster = c('otherCare', 'otherVolunteer', 'otherReligious'),
+                   sequence = c(otherCare, otherVolunteer, otherReligious)))
 
 # get colors of default string for use in jquery
 modal_strings_colors <- modal_strings %>% 
@@ -62,6 +112,12 @@ modal_strings_colors <- modal_strings %>%
   rename(activity = value) %>% 
   left_join(string_table)
 
+# plot of created days
+modal_strings_colors %>% 
+  mutate(name = as.numeric(name)) %>% 
+  ggplot(aes(x = name, y = cluster, fill = description)) +
+  geom_tile(color = 'white')
+
 # generate JS code to define sequence arrays per cluster
 final_clusters <- unique(modal_strings_colors$cluster)
 for (i in seq_along(final_clusters)){
@@ -69,6 +125,7 @@ for (i in seq_along(final_clusters)){
     filter(cluster == final_clusters[i]) %>% 
     pull(val) %>% 
     paste0("{val : '", ., "'}", collapse = ',') %>% 
+    paste0("let proto", i," = [ ", ., " ]") %>% 
     writeLines()
   writeLines('\n')
 }
