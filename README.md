@@ -9,9 +9,9 @@ See also: [ATUS repo](https://github.com/joemarlo/ATUS)
 </p>
 
 <p align="center">
-<img src="dendrogram.png" width=70%>
+<img src="Plots/dendrogram.png" width=50%>
 </p>
 
 <p align="center">
-<img src="modal_sequences.svg" width=70%>
+<img src="Plots/pmodal_sequences.svg" width=70%>
 </p>
