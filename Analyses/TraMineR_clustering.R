@@ -208,18 +208,22 @@ labels <- c(labels[2:12], labels[1:2])
 labels[1] <- "4am"
 
 # plot the modes
+custom_colors <- c(string_table$val)
+names(custom_colors) <- string_table$description
 modal_activities %>% 
+  ungroup() %>% 
   left_join(string_table, by = c("mode" = "activity")) %>% 
   ggplot(aes(x = index, y = cluster, fill = description)) +
   geom_tile(color = 'white', size = 0.5) +
   scale_x_continuous(labels = labels,
                      breaks = seq(0, 48, by = 4)) +
+  scale_fill_manual(values = custom_colors) +
   labs(title = "Modal sequences per cluster",
        x = NULL,
        y = NULL,
        fill = NULL) +
   theme(legend.position = 'bottom')
-# ggsave("Plots/modal_sequences.svg", width = 7, height = 4)
+# ggsave("Plots/modal_sequences.svg", width = 7.5, height = 4)
 
 # write out the modal strings
 modal_strings <- modal_activities %>% 
@@ -253,6 +257,7 @@ atus_samp %>%
   scale_y_discrete(labels = NULL) +
   scale_x_continuous(labels = labels,
                      breaks = seq(0, 48, by = 4)) +
+  scale_fill_manual(values = custom_colors) +
   facet_wrap(~cluster, ncol = 2, scales = 'free_y') +
   labs(title = 'Edit distance and Ward D2 clustering',
        subtitle = "Each row represents an individual respondent's day",
