@@ -2,7 +2,7 @@ library(tidyverse)
 set.seed(44)
 setwd('/home/joemarlo/Dropbox/Data/Projects/ATUS-similarity')
 
-activities <- read_csv("d3/data/string_table.csv") %>% 
+activities <- read_csv("Frontend/data/string_table.csv") %>% 
   pull(description)
 
 #'<select value="', button_colors[1],'" class="user_input" id="input_one">\n'
@@ -36,14 +36,14 @@ sequence_colors <- c(
 scales::show_col(sequence_colors)
 
 # add colors to string table
-string_table <- read_csv("d3/data/string_table.csv")
+string_table <- read_csv("Frontend/data/string_table.csv")
 #string_table$val <- sequence_colors
 
 # manually edit colors
 # string_table$val[string_table$description == 'Sleep'] = 
 
 # write out table
-string_table %>% write_csv('d3/data/string_table.csv')
+string_table %>% write_csv('Frontend/data/string_table.csv')
 
 # get colors for lookup table in jquery
 writeLines(

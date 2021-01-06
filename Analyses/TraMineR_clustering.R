@@ -266,4 +266,4 @@ atus_samp %>%
        fill = NULL) +
   guides(fill = guide_legend(ncol = 1)) +
   theme(legend.position = 'right')
-# ggsave("Plots/state_distributions_by_cluster.png", width = 9, height = 6)
+# ggsave("Plots/state_distributions_by_cluster.png", width = 9, height = 8)

@@ -11,7 +11,7 @@ sampled_IDs <- IDs_by_cluster %>%
   group_by(ID) %>% 
   arrange(desc(DescTools::Entropy(table(activity))))
 
-sampled_IDs %>% write_csv("d3/data/sequences.csv")
+sampled_IDs %>% write_csv("Frontend/data/sequences.csv")
 
 # read in the demographics data
 demographics <- read_delim(file = "Inputs/demographic.tsv",
@@ -35,11 +35,11 @@ demographics %>%
          education = if_else(education == "Did not graduate from HS",
                              "No HS",
                              education),
-         education = if_else(is.na(education), "Unknown", education)) %>% 
-  write_csv("d3/data/demographics.csv")
+         education = if_else(is.na(education), "Unknown", education)) %>%
+  write_csv("Frontend/data/demographics.csv")
 
 # change name on string table
 # read_csv("Analyses/Data/string_table.csv") %>% 
 #   rename(activity = string) %>% 
-#   write_csv("d3/data/string_table.csv")
+#   write_csv("Frontend/data/string_table.csv")
 
