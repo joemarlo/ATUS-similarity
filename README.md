@@ -5,7 +5,7 @@ Tool to visualize who spends their day most similar to you. Sequence analysis co
 See also: [ATUS repo](https://github.com/joemarlo/ATUS)
 
 <p align="center">
-<img src="screenshot.png" width=70%>
+<img src="screenshot.png" width=60%>
 </p>
 
 <p align="center">
@@ -13,5 +13,5 @@ See also: [ATUS repo](https://github.com/joemarlo/ATUS)
 </p>
 
 <p align="center">
-<img src="Plots/pmodal_sequences.svg" width=70%>
+<img src="Plots/modal_sequences.svg" width=70%>
 </p>
