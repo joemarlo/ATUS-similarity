@@ -33,8 +33,9 @@ demographics %>%
          HH_income = if_else(is.na(HH_income), 0, HH_income),
          race = str_to_title(race),
          education = if_else(education == "Did not graduate from HS",
-                             "Less than HS",
-                             education)) %>% 
+                             "No HS",
+                             education),
+         education = if_else(is.na(education), "Unknown", education)) %>% 
   write_csv("d3/data/demographics.csv")
 
 # change name on string table

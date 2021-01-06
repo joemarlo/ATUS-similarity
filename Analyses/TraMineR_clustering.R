@@ -136,7 +136,7 @@ ggd1$segments %>%
         panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(),
         legend.position = 'none')
-# ggsave("Plots/dendrogram.svg", width = 7, height = 4)
+# ggsave("Plots/dendrogram.png", width = 7, height = 4)
 
 # sequence plots ----------------------------------------------------------
 
@@ -217,7 +217,8 @@ modal_activities %>%
   labs(title = "Modal sequences per cluster",
        x = NULL,
        y = NULL,
-       fill = NULL)
+       fill = NULL) +
+  theme(legend.position = 'bottom')
 # ggsave("Plots/modal_sequences.svg", width = 7, height = 4)
 
 # write out the modal strings

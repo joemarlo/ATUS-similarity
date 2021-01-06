@@ -3,7 +3,7 @@ function getConfigBar(){
   let height = 200;
   let margin = {
       top: 10,
-      bottom: 100,
+      bottom: 20,
       left: 10,
       right: 10
   }
@@ -18,14 +18,9 @@ function getConfigBar(){
   return {width, height, margin, bodyHeight, bodyWidth, container}
 }
 
-function getScalesBar(data, config, id){
-
-}
-
 function getScalesBar(data, configBar) {
  let { bodyWidth, bodyHeight } = configBar;
  let maximumValue = d3.max(data, d => +d.value);
- //console.log(d3.max(data, d => +d[id]))
 
  let xScale = d3.scaleBand()
      .domain(data.map(function(d) { return d.key; }))
@@ -33,7 +28,7 @@ function getScalesBar(data, configBar) {
      .padding(0.2);
 
  let yScale = d3.scaleLinear()
-      .domain([0, maximumValue])
+     .domain([0, maximumValue*1.2]) //this is a hack b/c I can't figure out why margins aren't working
      .range([bodyHeight, 0])
 
  return {xScale, yScale}
@@ -55,20 +50,22 @@ function drawBars(data, configBar, scales, id){
   d3.selectAll(".bottomAxisBar" + id).remove()
   container.append("g")
    .attr("class", "bottomAxisBar" + id)
-  // .attr("transform", "translate(0," + bodyHeight + ")")
-   .attr("transform", "translate(" + margin.left + "," + bodyHeight + ")")
+   .attr("transform", "translate(0," + bodyHeight + ")")
+  // .attr("transform", "translate(" + margin.left + "," + bodyHeight + ")")
    .call(d3.axisBottom(xScale))
    .selectAll("text")
      .attr("transform", "translate(-10,5)rotate(-70)")
      .style("text-anchor", "end");
 
   // remove and redraw x axis label
+  /*
   d3.selectAll(".xaxis_label_bar_"+id).remove()
   container.append("text")
     .attr("class", "xaxis_label xaxis_label_bar_"+id)
     .attr("transform",
           "translate(" + (bodyWidth*1/2) + " ," + (bodyHeight + (margin.bottom*3/4)) + ")")
     .text(id)
+  */
 
  // join data with rect
  let rects = container
@@ -103,15 +100,14 @@ function drawBars(data, configBar, scales, id){
  rects
    .exit()
    .remove()
-}
 
-function countData(data, id){
-  counts = d3.nest()
-  .key(d => d[id])
-  .rollup(d => d.length)
-  .entries(demographics);
-
-  return counts
+ // Add title to graph
+ d3.select("svg.plotBar"+id)
+   .append("text")
+     .attr("class", "plot_title_bar_plot plot_title_bar_plot_text")
+     .attr("x", 0) //margin.left
+     .attr("y", (margin.top * 1.3))
+     .text(id);
 }
 
 function drawBarPlots(data) {
