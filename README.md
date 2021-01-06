@@ -4,10 +4,12 @@ Tool to visualize who spends their day most similar to you. Sequence analysis co
 
 See also: [ATUS repo](https://github.com/joemarlo/ATUS)
 
+## The tool
 <p align="center">
 <img src="screenshot.png" width=60%>
 </p>
 
+## Analysis
 <p align="center">
 <img src="Plots/dendrogram.png" width=50%>
 </p>

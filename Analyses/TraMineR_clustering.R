@@ -126,7 +126,7 @@ ggd1$segments %>%
                lwd = 0.6, alpha = 0.7) +
   scale_x_continuous(labels = NULL) +
   scale_y_continuous(labels = scales::comma_format()) +
-  labs(title = "Dendrograms by edit distance with Ward (D2) linkage",
+  labs(title = "Dendrogram of edit distance with Ward (D2) linkage",
        subtitle = paste0("Weighted sample of ", 
                          scales::comma_format()(n_sample),
                          " respondents"),
