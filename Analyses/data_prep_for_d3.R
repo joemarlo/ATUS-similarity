@@ -1,16 +1,19 @@
+library(tidyverse)
 setwd('/home/joemarlo/Dropbox/Data/Projects/ATUS-similarity')
+set.seed(44)
 
 # create data for d3; need to slice sample because file size performance
-IDS_by_cluster <- read_csv('Analyses/Data/clusters.csv')
+IDs_by_cluster <- read_csv('Analyses/Data/clusters.csv')
 sampled_IDs <- IDs_by_cluster %>% 
   group_by(cluster) %>% 
-  slice_sample(n = 200) %>%
+  slice_sample(n = 400) %>%
   separate(sequence, as.character(1:48), sep = 1:48) %>% 
   pivot_longer(cols = 3:50) %>% 
   rename(time = name, activity = value) %>% 
   group_by(ID) %>% 
   arrange(desc(DescTools::Entropy(table(activity))))
 
+# write out the sampled clusters
 sampled_IDs %>% write_csv("Frontend/data/sequences.csv")
 
 # read in the demographics data

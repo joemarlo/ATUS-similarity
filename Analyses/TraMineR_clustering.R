@@ -230,7 +230,7 @@ modal_strings <- modal_activities %>%
   group_by(cluster) %>% 
   summarize(sequence = paste0(mode, collapse = ""),
             .groups = 'drop')
-write_csv(modal_strings, "Analyses/Data/modes.csv")
+write_csv(modal_strings, "Frontend/data/modes.csv")
 
 
 # plot the sequences ------------------------------------------------------
