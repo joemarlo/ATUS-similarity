@@ -2,18 +2,6 @@ library(tidyverse)
 set.seed(44)
 setwd('/home/joemarlo/Dropbox/Data/Projects/ATUS-similarity')
 
-activities <- read_csv("Frontend/data/string_table.csv") %>% 
-  pull(description)
-
-#'<select value="', button_colors[1],'" class="user_input" id="input_one">\n'
-map2(.x = button_colors, .y = activities[1:11], function(col, activity){
-  paste0(
-      '<option value="#', col, '">', activity, '</option>'
-  )
-}) %>% paste0(collapse="")
-
-sequence_colors <- colorRampPalette(RColorBrewer::brewer.pal(10, "Paired"))(15)
-
 # from colorgorical: http://vrl.cs.brown.edu/color
 sequence_colors <- c(
     "#208eb7",
@@ -49,7 +37,6 @@ string_table %>% write_csv('Frontend/data/string_table.csv')
 writeLines(
   paste0("{val : '", string_table$val, "', text: '", string_table$description, "'}", collapse = ', ')
 )
-
 
 # read in modal strings
 modal_strings <- read_csv("Analyses/Data/modes.csv")
